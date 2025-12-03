@@ -2,227 +2,1709 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Comparador de Processos</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LegalTech Pro | Comparador de Processos</title>
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <style>
-    /* Estilo básico da página */
-    body {
-        font-family: Arial, sans-serif;
-        background: #eef1f7;
+    /* Reset e Variáveis Globais */
+    :root {
+        --primary: #0066cc;
+        --primary-dark: #0052a3;
+        --primary-light: #3385d6;
+        --secondary: #00a86b;
+        --secondary-dark: #008753;
+        --accent: #6c63ff;
+        --accent-light: #8a84ff;
+        --neutral-50: #f8fafc;
+        --neutral-100: #f1f5f9;
+        --neutral-200: #e2e8f0;
+        --neutral-300: #cbd5e1;
+        --neutral-400: #94a3b8;
+        --neutral-500: #64748b;
+        --neutral-600: #475569;
+        --neutral-700: #334155;
+        --neutral-800: #1e293b;
+        --neutral-900: #0f172a;
+        --success: #10b981;
+        --warning: #f59e0b;
+        --error: #ef4444;
+        --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
+        --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.08);
+        --shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.12);
+        --shadow-xl: 0 20px 60px rgba(0, 0, 0, 0.15);
+        --radius-sm: 6px;
+        --radius-md: 10px;
+        --radius-lg: 16px;
+        --radius-xl: 24px;
+        --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        --transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
         margin: 0;
         padding: 0;
+        box-sizing: border-box;
     }
 
-    /* Container central onde fica o conteúdo */
-    .container {
-        width: 60%;
-        margin: 40px auto;
-        background: #ffffff;
-        padding: 30px;
-        border-radius: 14px;
-        box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    html {
+        scroll-behavior: smooth;
+        scroll-padding-top: 100px;
     }
 
-    /* Título da página */
-    h1 {
-        text-align: center;
-        color: #213b72;
-        margin-bottom: 25px;
-        font-size: 28px;
+    body {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        background: linear-gradient(135deg, #f0f7ff 0%, #e6f0ff 100%);
+        color: var(--neutral-800);
+        line-height: 1.6;
+        min-height: 100vh;
+        overflow-x: hidden;
     }
 
-    /* Caixinhas brancas ao redor do input */
-    .box {
-        margin-bottom: 20px;
-        padding: 20px;
-        background: #f8f9fc;
-        border: 1px solid #dcdfe6;
-        border-radius: 10px;
-    }
-
-    /* Estilo dos textos (labels) */
-    label {
-        font-weight: bold;
-        color: #2b2b2b;
-    }
-
-    /* Botão principal */
-    .btn {
+    /* Efeito de partículas sutis */
+    #particles-js {
+        position: fixed;
         width: 100%;
-        padding: 14px;
-        border: none;
-        background: #294bbf;
-        color: #fff;
-        font-size: 16px;
-        border-radius: 10px;
-        cursor: pointer;
-        font-weight: bold;
-        margin-top: 15px;
-        transition: 0.2s ease-in-out;
+        height: 100%;
+        z-index: -1;
+        opacity: 0.3;
     }
 
-    /* Efeito ao passar o mouse */
-    .btn:hover {
-        background: #1a3590;
+    /* Layout Principal */
+    .app-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 20px;
+        position: relative;
     }
 
-    /* Texto de status (mensagens do sistema) */
-    #status {
-        margin-top: 20px;
-        font-size: 16px;
+    /* Header Corporativo */
+    .corporate-header {
+        background: linear-gradient(135deg, var(--neutral-900) 0%, var(--primary-dark) 100%);
+        color: white;
+        padding: 24px 0;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        box-shadow: var(--shadow-lg);
+        backdrop-filter: blur(10px);
+        background-color: rgba(0, 0, 0, 0.95);
+    }
+
+    .header-content {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .logo-container {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        animation: slideInLeft 0.8s var(--transition-normal);
+    }
+
+    .logo {
+        width: 48px;
+        height: 48px;
+        background: linear-gradient(135deg, var(--primary), var(--accent));
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        color: white;
+        box-shadow: 0 8px 24px rgba(108, 99, 255, 0.3);
+    }
+
+    .logo-text {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 28px;
+        font-weight: 700;
+        background: linear-gradient(135deg, #fff 0%, #a5b4fc 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .logo-subtitle {
+        font-size: 14px;
+        opacity: 0.8;
+        font-weight: 400;
+    }
+
+    .user-info {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        animation: slideInRight 0.8s var(--transition-normal);
+    }
+
+    .user-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--secondary), var(--accent));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 600;
+    }
+
+    /* Conteúdo Principal */
+    .main-content {
+        padding: 40px 0 80px;
+        animation: fadeIn 1s var(--transition-slow);
+    }
+
+    /* Título da Seção */
+    .section-title {
         text-align: center;
-        font-weight: bold;
+        margin-bottom: 48px;
+        animation: fadeInUp 0.8s var(--transition-normal);
+    }
+
+    .section-title h1 {
+        font-size: 42px;
+        font-weight: 700;
+        background: linear-gradient(135deg, var(--primary), var(--neutral-800));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 16px;
+    }
+
+    .section-subtitle {
+        font-size: 18px;
+        color: var(--neutral-600);
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    /* Grid de Upload */
+    .upload-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+        gap: 32px;
+        margin-bottom: 48px;
+    }
+
+    @media (max-width: 1024px) {
+        .upload-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    /* Cards de Upload */
+    .upload-card {
+        background: white;
+        border-radius: var(--radius-xl);
+        padding: 40px;
+        box-shadow: var(--shadow-lg);
+        transition: all var(--transition-normal);
+        border: 1px solid var(--neutral-200);
+        animation: fadeInUp 0.8s var(--transition-normal);
+        animation-fill-mode: both;
+    }
+
+    .upload-card:nth-child(1) {
+        animation-delay: 0.1s;
+    }
+
+    .upload-card:nth-child(2) {
+        animation-delay: 0.2s;
+    }
+
+    .upload-card:hover {
+        transform: translateY(-8px);
+        box-shadow: var(--shadow-xl);
+        border-color: var(--primary-light);
+    }
+
+    .card-header {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        margin-bottom: 32px;
+    }
+
+    .card-icon {
+        width: 64px;
+        height: 64px;
+        background: linear-gradient(135deg, var(--neutral-100), white);
+        border-radius: var(--radius-lg);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        color: var(--primary);
+        box-shadow: var(--shadow-md);
+        transition: transform var(--transition-normal);
+    }
+
+    .upload-card:hover .card-icon {
+        transform: scale(1.1) rotate(5deg);
+    }
+
+    .card-title {
+        font-size: 24px;
+        font-weight: 600;
+        color: var(--neutral-800);
+        margin-bottom: 8px;
+    }
+
+    .card-description {
+        color: var(--neutral-500);
+        font-size: 15px;
+    }
+
+    /* Área de Upload Moderna */
+    .upload-area {
+        border: 2px dashed var(--neutral-300);
+        border-radius: var(--radius-lg);
+        padding: 48px 32px;
+        text-align: center;
+        cursor: pointer;
+        transition: all var(--transition-normal);
+        background: var(--neutral-50);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .upload-area::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(0, 102, 204, 0.05), transparent);
+        transition: left var(--transition-slow);
+    }
+
+    .upload-area:hover {
+        border-color: var(--primary);
+        background: rgba(0, 102, 204, 0.02);
+    }
+
+    .upload-area:hover::before {
+        left: 100%;
+    }
+
+    .upload-area.dragover {
+        border-color: var(--secondary);
+        background: rgba(0, 168, 107, 0.05);
+        transform: scale(1.02);
+    }
+
+    .upload-icon {
+        font-size: 64px;
+        color: var(--primary);
+        margin-bottom: 24px;
+        opacity: 0.8;
+        transition: transform var(--transition-normal);
+    }
+
+    .upload-area:hover .upload-icon {
+        transform: translateY(-5px);
+        opacity: 1;
+    }
+
+    .upload-text {
+        font-size: 20px;
+        font-weight: 600;
+        color: var(--neutral-800);
+        margin-bottom: 12px;
+    }
+
+    .upload-hint {
+        color: var(--neutral-500);
+        font-size: 14px;
+        margin-bottom: 24px;
+    }
+
+    .file-info {
+        margin-top: 24px;
+        padding: 20px;
+        background: linear-gradient(135deg, var(--neutral-50), white);
+        border-radius: var(--radius-md);
+        text-align: left;
+        animation: slideInDown 0.4s var(--transition-fast);
+        border-left: 4px solid var(--primary);
+    }
+
+    .file-name {
+        font-weight: 600;
+        color: var(--neutral-800);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 8px;
+        font-size: 16px;
+    }
+
+    .file-details {
+        display: flex;
+        justify-content: space-between;
+        color: var(--neutral-500);
+        font-size: 14px;
+    }
+
+    /* Botão de Ação Principal */
+    .action-section {
+        text-align: center;
+        margin: 60px 0;
+        animation: fadeInUp 0.8s var(--transition-normal);
+        animation-delay: 0.3s;
+        animation-fill-mode: both;
+    }
+
+    .primary-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 16px;
+        background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+        color: white;
+        border: none;
+        padding: 22px 56px;
+        font-size: 18px;
+        font-weight: 600;
+        border-radius: var(--radius-lg);
+        cursor: pointer;
+        transition: all var(--transition-normal);
+        box-shadow: 0 10px 30px rgba(0, 102, 204, 0.3);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .primary-btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.7s;
+    }
+
+    .primary-btn:hover {
+        transform: translateY(-4px) scale(1.02);
+        box-shadow: 0 20px 50px rgba(0, 102, 204, 0.4);
+    }
+
+    .primary-btn:hover::before {
+        left: 100%;
+    }
+
+    .primary-btn:active {
+        transform: translateY(-2px) scale(1.01);
+    }
+
+    .primary-btn:disabled {
+        background: var(--neutral-300);
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+    }
+
+    .primary-btn:disabled:hover::before {
+        left: -100%;
+    }
+
+    /* Loader Elegante */
+    .loader-container {
+        display: none;
+        text-align: center;
+        margin: 60px 0;
+    }
+
+    .loader-container.show {
+        display: block;
+        animation: fadeIn 0.5s var(--transition-normal);
+    }
+
+    .loader {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto 24px;
+        position: relative;
+    }
+
+    .loader-circle {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border: 4px solid transparent;
+        border-top-color: var(--primary);
+        border-radius: 50%;
+        animation: spin 1.2s linear infinite;
+    }
+
+    .loader-circle:nth-child(2) {
+        border-top-color: var(--secondary);
+        animation-delay: -0.4s;
+        width: 70%;
+        height: 70%;
+        top: 15%;
+        left: 15%;
+    }
+
+    .loader-circle:nth-child(3) {
+        border-top-color: var(--accent);
+        animation-delay: -0.8s;
+        width: 50%;
+        height: 50%;
+        top: 25%;
+        left: 25%;
+    }
+
+    .loader-text {
+        font-size: 18px;
+        color: var(--neutral-600);
+        font-weight: 500;
+        animation: pulse 2s infinite;
+    }
+
+    /* Seção de Resultados */
+    .results-section {
+        animation: fadeIn 1s var(--transition-slow);
+    }
+
+    .results-card {
+        background: white;
+        border-radius: var(--radius-xl);
+        padding: 48px;
+        box-shadow: var(--shadow-xl);
+        margin-top: 40px;
+        animation: slideInUp 0.8s var(--transition-normal);
+        border: 1px solid var(--neutral-200);
+    }
+
+    .results-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 40px;
+        flex-wrap: wrap;
+        gap: 24px;
+    }
+
+    .results-title {
+        font-size: 32px;
+        font-weight: 700;
+        color: var(--neutral-900);
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-bottom: 40px;
+    }
+
+    .stat-card {
+        background: linear-gradient(135deg, var(--neutral-50), white);
+        padding: 32px 24px;
+        border-radius: var(--radius-lg);
+        text-align: center;
+        transition: transform var(--transition-normal);
+        border: 1px solid var(--neutral-200);
+        animation: popIn 0.6s var(--transition-normal);
+        animation-fill-mode: both;
+    }
+
+    .stat-card:nth-child(1) { animation-delay: 0.1s; }
+    .stat-card:nth-child(2) { animation-delay: 0.2s; }
+    .stat-card:nth-child(3) { animation-delay: 0.3s; }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+        border-color: var(--primary-light);
+        box-shadow: var(--shadow-md);
+    }
+
+    .stat-value {
+        font-size: 48px;
+        font-weight: 800;
+        line-height: 1;
+        margin-bottom: 12px;
+        background: linear-gradient(135deg, var(--primary), var(--accent));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .stat-label {
+        color: var(--neutral-600);
+        font-size: 16px;
+        font-weight: 500;
+    }
+
+    /* Tabela Profissional */
+    .table-wrapper {
+        overflow-x: auto;
+        border-radius: var(--radius-lg);
+        margin: 40px 0;
+        box-shadow: var(--shadow-md);
+        animation: slideInUp 0.8s var(--transition-normal);
+    }
+
+    .results-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        background: white;
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+        min-width: 800px;
+    }
+
+    .results-table thead {
+        background: linear-gradient(135deg, var(--neutral-900), var(--neutral-800));
+        position: sticky;
+        top: 0;
+    }
+
+    .results-table th {
+        padding: 20px 24px;
+        text-align: left;
+        color: white;
+        font-weight: 600;
+        font-size: 15px;
+        position: relative;
+        white-space: nowrap;
+    }
+
+    .results-table th:not(:last-child)::after {
+        content: '';
+        position: absolute;
+        right: 0;
+        top: 25%;
+        height: 50%;
+        width: 1px;
+        background: rgba(255, 255, 255, 0.1);
+    }
+
+    .results-table tbody tr {
+        transition: all var(--transition-fast);
+        border-bottom: 1px solid var(--neutral-200);
+    }
+
+    .results-table tbody tr:hover {
+        background: linear-gradient(90deg, rgba(0, 102, 204, 0.03), rgba(108, 99, 255, 0.03));
+        transform: translateX(4px);
+    }
+
+    .results-table td {
+        padding: 20px 24px;
+        font-size: 15px;
+        color: var(--neutral-700);
+    }
+
+    .process-number {
+        font-family: 'Monaco', 'Courier New', monospace;
+        font-weight: 600;
+        color: var(--primary);
+        background: var(--neutral-50);
+        padding: 6px 12px;
+        border-radius: var(--radius-sm);
+        font-size: 14px;
+    }
+
+    .status-badge {
+        padding: 6px 16px;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: 600;
+        display: inline-block;
+    }
+
+    .status-common {
+        background: linear-gradient(135deg, var(--success), #34d399);
+        color: white;
+    }
+
+    .status-unique {
+        background: linear-gradient(135deg, var(--warning), #fbbf24);
+        color: white;
+    }
+
+    /* Barra de Progresso */
+    .comparison-progress {
+        height: 8px;
+        background: var(--neutral-200);
+        border-radius: 4px;
+        overflow: hidden;
+        margin: 40px 0;
+        animation: slideInUp 0.8s var(--transition-normal);
+    }
+
+    .progress-bar {
+        height: 100%;
+        background: linear-gradient(90deg, var(--primary), var(--secondary));
+        border-radius: 4px;
+        width: 0%;
+        transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .progress-bar::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+        animation: shimmer 2s infinite;
+    }
+
+    /* Botões de Exportação */
+    .export-actions {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+        margin-top: 48px;
+        flex-wrap: wrap;
+    }
+
+    .export-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        padding: 18px 36px;
+        font-size: 16px;
+        font-weight: 600;
+        border-radius: var(--radius-lg);
+        cursor: pointer;
+        transition: all var(--transition-normal);
+        border: 2px solid transparent;
+        min-width: 200px;
+        justify-content: center;
+    }
+
+    .export-excel {
+        background: linear-gradient(135deg, var(--success), var(--secondary));
+        color: white;
+        box-shadow: 0 8px 24px rgba(16, 185, 129, 0.3);
+    }
+
+    .export-excel:hover {
+        transform: translateY(-3px) scale(1.02);
+        box-shadow: 0 12px 32px rgba(16, 185, 129, 0.4);
+    }
+
+    .export-csv {
+        background: linear-gradient(135deg, var(--primary), var(--primary-light));
+        color: white;
+        box-shadow: 0 8px 24px rgba(0, 102, 204, 0.3);
+    }
+
+    .export-csv:hover {
+        transform: translateY(-3px) scale(1.02);
+        box-shadow: 0 12px 32px rgba(0, 102, 204, 0.4);
+    }
+
+    .reset-btn {
+        background: white;
+        color: var(--neutral-700);
+        border: 2px solid var(--neutral-300);
+    }
+
+    .reset-btn:hover {
+        border-color: var(--error);
+        color: var(--error);
+        transform: translateY(-3px);
+        box-shadow: 0 8px 24px rgba(239, 68, 68, 0.1);
+    }
+
+    /* Status Notifications */
+    .notification-container {
+        position: fixed;
+        top: 100px;
+        right: 20px;
+        z-index: 9999;
+        max-width: 400px;
+        pointer-events: none;
+    }
+
+    .notification {
+        background: white;
+        border-radius: var(--radius-md);
+        padding: 20px;
+        margin-bottom: 16px;
+        box-shadow: var(--shadow-xl);
+        border-left: 4px solid;
+        animation: slideInRight 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        pointer-events: auto;
+        position: relative;
+        overflow: hidden;
+        max-height: 0;
+        opacity: 0;
+        transform: translateX(100px);
+        animation: notificationIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    .notification.success {
+        border-left-color: var(--success);
+    }
+
+    .notification.error {
+        border-left-color: var(--error);
+    }
+
+    .notification.info {
+        border-left-color: var(--primary);
+    }
+
+    .notification-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 8px;
+    }
+
+    .notification-icon {
+        font-size: 20px;
+    }
+
+    .notification-title {
+        font-weight: 600;
+        font-size: 16px;
+    }
+
+    .notification-body {
+        color: var(--neutral-600);
+        font-size: 14px;
+    }
+
+    .notification-progress {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 3px;
+        background: currentColor;
+        opacity: 0.3;
+        width: 100%;
+        transform-origin: left;
+        animation: progressBar 5s linear forwards;
+    }
+
+    /* Animações */
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes slideInUp {
+        from { opacity: 0; transform: translateY(50px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes slideInLeft {
+        from { opacity: 0; transform: translateX(-30px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes slideInRight {
+        from { opacity: 0; transform: translateX(30px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes slideInDown {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.7; }
+    }
+
+    @keyframes popIn {
+        0% { opacity: 0; transform: scale(0.8); }
+        70% { opacity: 1; transform: scale(1.05); }
+        100% { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes shimmer {
+        0% { transform: translateX(-100%); }
+        100% { transform: translateX(200%); }
+    }
+
+    @keyframes notificationIn {
+        to { 
+            max-height: 200px; 
+            opacity: 1; 
+            transform: translateX(0); 
+            margin-bottom: 16px;
+        }
+    }
+
+    @keyframes progressBar {
+        from { transform: scaleX(1); }
+        to { transform: scaleX(0); }
+    }
+
+    /* Scroll Personalizado */
+    ::-webkit-scrollbar {
+        width: 10px;
+        height: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: var(--neutral-100);
+        border-radius: 5px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: linear-gradient(135deg, var(--neutral-400), var(--neutral-500));
+        border-radius: 5px;
+        transition: background var(--transition-fast);
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    }
+
+    /* Responsividade */
+    @media (max-width: 768px) {
+        .app-container {
+            padding: 0 16px;
+        }
+
+        .header-content {
+            flex-direction: column;
+            gap: 16px;
+            text-align: center;
+        }
+
+        .section-title h1 {
+            font-size: 32px;
+        }
+
+        .upload-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .upload-card {
+            padding: 24px;
+        }
+
+        .card-header {
+            flex-direction: column;
+            text-align: center;
+            gap: 16px;
+        }
+
+        .results-header {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .export-actions {
+            flex-direction: column;
+        }
+
+        .export-btn {
+            min-width: 100%;
+        }
+
+        .primary-btn {
+            padding: 18px 32px;
+            font-size: 16px;
+        }
+    }
+
+    /* Efeito de digitação */
+    .typewriter {
+        overflow: hidden;
+        border-right: 2px solid var(--primary);
+        white-space: nowrap;
+        animation: typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite;
+    }
+
+    @keyframes typing {
+        from { width: 0 }
+        to { width: 100% }
+    }
+
+    @keyframes blink-caret {
+        from, to { border-color: transparent }
+        50% { border-color: var(--primary) }
     }
 </style>
 </head>
 <body>
 
-<div class="container">
-    <h1>Comparador de Processos</h1>
+<!-- Efeito de partículas -->
+<div id="particles-js"></div>
 
-    <!-- Seleção do primeiro arquivo -->
-    <div class="box">
-        <label>Planilha 1 (CSV ou XLSX):</label><br><br>
-        <input type="file" id="fileA" accept=".csv,.xlsx">
+<!-- Header Corporativo -->
+<header class="corporate-header">
+    <div class="app-container">
+        <div class="header-content">
+            <div class="logo-container">
+                <div class="logo">
+                    <i class="fas fa-balance-scale"></i>
+                </div>
+                <div>
+                    <div class="logo-text">LegalTech Pro</div>
+                    <div class="logo-subtitle">Sistema de Gestão de Processos</div>
+                </div>
+            </div>
+        </div>
     </div>
+</header>
 
-    <!-- Seleção do segundo arquivo -->
-    <div class="box">
-        <label>Planilha 2 (CSV ou XLSX):</label><br><br>
-        <input type="file" id="fileB" accept=".csv,.xlsx">
+<!-- Conteúdo Principal -->
+<main class="main-content">
+    <div class="app-container">
+        <!-- Título -->
+        <div class="section-title">
+            <h1 class="typewriter">Comparador de Processos</h1>
+            <p class="section-subtitle">Identifique processos em comum entre diferentes fontes de dados de forma rápida, segura e precisa</p>
+        </div>
+
+        <!-- Grid de Upload -->
+        <div class="upload-grid">
+            <!-- Planilha 1 -->
+            <div class="upload-card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-file-excel"></i>
+                    </div>
+                    <div>
+                        <h2 class="card-title">Planilha Principal</h2>
+                        <p class="card-description">Carregue sua planilha de origem</p>
+                    </div>
+                </div>
+
+                <div class="upload-area" id="uploadArea1">
+                    <div class="upload-icon">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                    </div>
+                    <div class="upload-text">Arraste e solte seu arquivo aqui</div>
+                    <div class="upload-hint">ou clique para selecionar (CSV, XLSX, XLS)</div>
+                    <input type="file" id="file1" class="file-input" accept=".csv,.xlsx,.xls" style="display: none;">
+                    <button class="primary-btn" onclick="document.getElementById('file1').click()" style="padding: 12px 24px; font-size: 14px;">
+                        <i class="fas fa-folder-open"></i> Selecionar Arquivo
+                    </button>
+                </div>
+
+                <div class="file-info" id="fileInfo1" style="display: none;">
+                    <div class="file-name">
+                        <i class="fas fa-check-circle" style="color: var(--success);"></i>
+                        <span id="fileName1"></span>
+                    </div>
+                    <div class="file-details">
+                        <span id="fileSize1"></span>
+                        <span id="fileType1"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Planilha 2 -->
+            <div class="upload-card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-file-csv"></i>
+                    </div>
+                    <div>
+                        <h2 class="card-title">Planilha para Comparação</h2>
+                        <p class="card-description">Carregue a planilha para comparação</p>
+                    </div>
+                </div>
+
+                <div class="upload-area" id="uploadArea2">
+                    <div class="upload-icon">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                    </div>
+                    <div class="upload-text">Arraste e solte seu arquivo aqui</div>
+                    <div class="upload-hint">ou clique para selecionar (CSV, XLSX, XLS)</div>
+                    <input type="file" id="file2" class="file-input" accept=".csv,.xlsx,.xls" style="display: none;">
+                    <button class="primary-btn" onclick="document.getElementById('file2').click()" style="padding: 12px 24px; font-size: 14px;">
+                        <i class="fas fa-folder-open"></i> Selecionar Arquivo
+                    </button>
+                </div>
+
+                <div class="file-info" id="fileInfo2" style="display: none;">
+                    <div class="file-name">
+                        <i class="fas fa-check-circle" style="color: var(--success);"></i>
+                        <span id="fileName2"></span>
+                    </div>
+                    <div class="file-details">
+                        <span id="fileSize2"></span>
+                        <span id="fileType2"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Botão de Comparação -->
+        <div class="action-section">
+            <button id="compareBtn" class="primary-btn" onclick="processComparison()" disabled>
+                <i class="fas fa-search"></i>
+                Iniciar Comparação
+                <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+
+        <!-- Loader -->
+        <div class="loader-container" id="loader">
+            <div class="loader">
+                <div class="loader-circle"></div>
+                <div class="loader-circle"></div>
+                <div class="loader-circle"></div>
+            </div>
+            <div class="loader-text">Processando arquivos...</div>
+        </div>
+
+        <!-- Seção de Resultados -->
+        <div id="resultsSection" style="display: none;">
+            <!-- Barra de Progresso -->
+            <div class="comparison-progress">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+
+            <!-- Estatísticas -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="totalProcesses">0</div>
+                    <div class="stat-label">Total de Processos</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="commonProcesses">0</div>
+                    <div class="stat-label">Processos em Comum</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="uniqueProcesses">0</div>
+                    <div class="stat-label">Processos Exclusivos</div>
+                </div>
+            </div>
+              <!-- Botões de Ação -->
+                <div class="export-actions">
+                    <button class="export-btn export-excel" onclick="exportToExcel()">
+                        <i class="fas fa-file-excel"></i>
+                        Exportar para Excel
+                    </button>
+                    <button class="export-btn export-csv" onclick="exportToCSV()">
+                        <i class="fas fa-file-csv"></i>
+                        Exportar para CSV
+                    </button>
+                    <button class="export-btn reset-btn" onclick="resetComparison()">
+                        <i class="fas fa-redo"></i>
+                        Nova Comparação
+                    </button>
+                </div>
+            <!-- Tabela de Resultados -->
+            <div class="results-card">
+                <div class="results-header">
+                    <h2 class="results-title">
+                        <i class="fas fa-table"></i>
+                        Resultados da Comparação
+                    </h2>
+                    <div style="color: var(--neutral-500); font-size: 14px;">
+                        <i class="fas fa-info-circle"></i>
+                        Clique em uma linha para detalhes
+                    </div>
+                </div>
+
+                <div class="table-wrapper">
+                    <table class="results-table" id="resultsTable">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Número do Processo</th>
+                                <th>Status</th>
+                                <th>Presente em</th>
+                                <th>Data de Inclusão</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            <!-- Os dados serão inseridos aqui via JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
+</main>
 
-    <!-- Botão que inicia o processo -->
-    <button class="btn" onclick="processFiles()">Comparar e Gerar Arquivo</button>
+<!-- Container de Notificações -->
+<div class="notification-container" id="notificationContainer"></div>
 
-    <!-- Área onde aparecerão mensagens para o usuário -->
-    <p id="status"></p>
-</div>
-
-<!-- Biblioteca XLSX para poder ler arquivos Excel -->
+<!-- Bibliotecas -->
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
 
 <script>
-// Função que tenta identificar qual coluna contém o número do processo
-// Isso é útil porque o nome pode ser "N° Processo", "Processo", "Número Processo", etc
-function encontrarColunaProcesso(obj) {
-    const cols = Object.keys(obj); // Pega os nomes das colunas
+// =============== CONFIGURAÇÃO INICIAL ===============
 
-    for (const col of cols) {
-        const normalizado = col
-            .toLowerCase()                // deixa tudo minúsculo
-            .normalize("NFD")             // separa acentos
-            .replace(/[\u0300-\u036f]/g, "") // remove acentos
-            .replace(/[^a-z]/g, "");      // remove caracteres especiais
-
-        // Verifica se o texto da coluna contém "processo"
-        if (normalizado.includes("processo")) {
-            return col; // Achou a coluna correta
+// Inicializa partículas
+particlesJS("particles-js", {
+    particles: {
+        number: { value: 80, density: { enable: true, value_area: 800 } },
+        color: { value: "#0066cc" },
+        shape: { type: "circle" },
+        opacity: { value: 0.3, random: true },
+        size: { value: 3, random: true },
+        line_linked: {
+            enable: true,
+            distance: 150,
+            color: "#0066cc",
+            opacity: 0.1,
+            width: 1
+        },
+        move: {
+            enable: true,
+            speed: 1,
+            direction: "none",
+            random: true,
+            straight: false,
+            out_mode: "out",
+            bounce: false
+        }
+    },
+    interactivity: {
+        detect_on: "canvas",
+        events: {
+            onhover: { enable: true, mode: "repulse" },
+            onclick: { enable: true, mode: "push" }
         }
     }
+});
 
-    return null; // Se não achou nenhuma coluna parecida
+// Estado da aplicação
+let appState = {
+    file1: null,
+    file2: null,
+    data1: null,
+    data2: null,
+    results: null,
+    isProcessing: false
+};
+
+// Elementos da interface
+const elements = {
+    file1Input: document.getElementById('file1'),
+    file2Input: document.getElementById('file2'),
+    uploadArea1: document.getElementById('uploadArea1'),
+    uploadArea2: document.getElementById('uploadArea2'),
+    fileInfo1: document.getElementById('fileInfo1'),
+    fileInfo2: document.getElementById('fileInfo2'),
+    compareBtn: document.getElementById('compareBtn'),
+    loader: document.getElementById('loader'),
+    resultsSection: document.getElementById('resultsSection'),
+    progressBar: document.getElementById('progressBar'),
+    tableBody: document.getElementById('tableBody'),
+    notificationContainer: document.getElementById('notificationContainer')
+};
+
+// =============== MANIPULAÇÃO DE ARQUIVOS ===============
+
+// Configura drag and drop
+['uploadArea1', 'uploadArea2'].forEach((areaId, index) => {
+    const area = document.getElementById(areaId);
+    const fileInput = index === 0 ? elements.file1Input : elements.file2Input;
+    
+    area.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        area.classList.add('dragover');
+    });
+    
+    area.addEventListener('dragleave', () => {
+        area.classList.remove('dragover');
+    });
+    
+    area.addEventListener('drop', (e) => {
+        e.preventDefault();
+        area.classList.remove('dragover');
+        
+        if (e.dataTransfer.files.length > 0) {
+            handleFileUpload(e.dataTransfer.files[0], index + 1);
+        }
+    });
+    
+    fileInput.addEventListener('change', (e) => {
+        if (e.target.files.length > 0) {
+            handleFileUpload(e.target.files[0], index + 1);
+        }
+    });
+});
+
+// Processa upload de arquivos
+function handleFileUpload(file, fileNumber) {
+    const maxSize = 50 * 1024 * 1024; // 50MB
+    
+    if (file.size > maxSize) {
+        showNotification('Arquivo muito grande', 'Tamanho máximo permitido: 50MB', 'error');
+        return;
+    }
+    
+    if (!file.name.match(/\.(csv|xlsx|xls)$/i)) {
+        showNotification('Formato inválido', 'Apenas CSV, XLSX e XLS são suportados', 'error');
+        return;
+    }
+    
+    // Atualiza estado
+    if (fileNumber === 1) {
+        appState.file1 = file;
+    } else {
+        appState.file2 = file;
+    }
+    
+    // Atualiza interface
+    updateFileInfo(file, fileNumber);
+    
+    // Verifica se pode habilitar comparação
+    updateCompareButton();
+    
+    showNotification('Arquivo carregado', `${file.name} carregado com sucesso`, 'success');
 }
 
-// Função para ler arquivos XLSX ou CSV usando FileReader
+// Atualiza informações do arquivo na interface
+function updateFileInfo(file, fileNumber) {
+    const fileInfo = document.getElementById(`fileInfo${fileNumber}`);
+    const fileName = document.getElementById(`fileName${fileNumber}`);
+    const fileSize = document.getElementById(`fileSize${fileNumber}`);
+    const fileType = document.getElementById(`fileType${fileNumber}`);
+    
+    fileName.textContent = file.name;
+    fileSize.textContent = formatBytes(file.size);
+    fileType.textContent = file.type || file.name.split('.').pop().toUpperCase();
+    
+    fileInfo.style.display = 'block';
+}
+
+// Formata bytes
+function formatBytes(bytes, decimals = 2) {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const dm = decimals < 0 ? 0 : decimals;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+}
+
+// Atualiza estado do botão de comparação
+function updateCompareButton() {
+    elements.compareBtn.disabled = !(appState.file1 && appState.file2);
+}
+
+// =============== NOTIFICAÇÕES ===============
+
+// Exibe notificação
+function showNotification(title, message, type = 'info') {
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    notification.innerHTML = `
+        <div class="notification-header">
+            <div class="notification-icon">
+                ${type === 'success' ? '✓' : type === 'error' ? '✗' : 'ℹ'}
+            </div>
+            <div class="notification-title">${title}</div>
+        </div>
+        <div class="notification-body">${message}</div>
+        <div class="notification-progress"></div>
+    `;
+    
+    elements.notificationContainer.appendChild(notification);
+    
+    // Remove após 5 segundos
+    setTimeout(() => {
+        notification.style.opacity = '0';
+        notification.style.transform = 'translateX(100px)';
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.parentNode.removeChild(notification);
+            }
+        }, 500);
+    }, 5000);
+}
+
+// =============== PROCESSAMENTO ===============
+
+// Lê arquivo Excel/CSV
 function readFile(file) {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
-
-        // O arquivo foi carregado com sucesso
-        reader.onload = e => {
-            const data = new Uint8Array(e.target.result);
-
-            // Lê o arquivo usando XLSX
-            const workbook = XLSX.read(data, { type: 'array' });
-            const sheet = workbook.Sheets[workbook.SheetNames[0]];
-
-            // Converte a planilha em JSON
-            const json = XLSX.utils.sheet_to_json(sheet, { defval: "" });
-
-            resolve(json); // Retorna os dados
+        reader.onload = async (e) => {
+            try {
+                const data = new Uint8Array(e.target.result);
+                const workbook = XLSX.read(data, { type: 'array' });
+                
+                // Tenta encontrar a sheet principal
+                let sheetName = workbook.SheetNames[0];
+                if (workbook.SheetNames.length > 1) {
+                    // Prefere sheets com nomes contendo 'processo'
+                    const processSheet = workbook.SheetNames.find(name => 
+                        name.toLowerCase().includes('processo')
+                    );
+                    if (processSheet) sheetName = processSheet;
+                }
+                
+                const sheet = workbook.Sheets[sheetName];
+                const json = XLSX.utils.sheet_to_json(sheet, { defval: "", raw: false });
+                
+                resolve({
+                    data: json,
+                    sheetName: sheetName,
+                    totalRows: json.length
+                });
+            } catch (error) {
+                reject(error);
+            }
         };
-
-        // Caso aconteça um erro na leitura
-        reader.onerror = err => reject(err);
-
-        // Começa a leitura do arquivo
+        reader.onerror = reject;
         reader.readAsArrayBuffer(file);
     });
 }
 
-// Função principal que compara as planilhas
-async function processFiles() {
-    // Pega os arquivos que o usuário escolheu
-    const fileA = document.getElementById("fileA").files[0];
-    const fileB = document.getElementById("fileB").files[0];
-    const status = document.getElementById("status");
-
-    // Se não tiver 2 arquivos, não dá para continuar
-    if (!fileA || !fileB) {
-        status.textContent = "Selecione as duas planilhas.";
-        status.style.color = "red";
-        return;
+// Encontra coluna de processos
+function findProcessColumn(data) {
+    if (!data || data.length === 0) return null;
+    
+    const firstRow = data[0];
+    const columns = Object.keys(firstRow);
+    
+    // Padrões de nomes de coluna (ordenados por prioridade)
+    const patterns = [
+        /processo/i,
+        /num.*processo/i,
+        /numero.*processo/i,
+        /process.*number/i,
+        /cod.*processo/i,
+        /id.*processo/i
+    ];
+    
+    // Primeiro, busca por padrões exatos
+    for (const pattern of patterns) {
+        const column = columns.find(col => pattern.test(col));
+        if (column) return column;
     }
+    
+    // Depois, busca por colunas que contenham 'proc'
+    const procColumn = columns.find(col => 
+        col.toLowerCase().includes('proc') || 
+        col.toLowerCase().includes('nproc')
+    );
+    if (procColumn) return procColumn;
+    
+    // Por último, tenta a primeira coluna que contenha números
+    const numericColumn = columns.find(col => {
+        const value = String(firstRow[col]).trim();
+        return /^\d{5,}/.test(value);
+    });
+    
+    return numericColumn || columns[0];
+}
 
-    status.textContent = "Lendo arquivos, aguarde...";
-    status.style.color = "black";
-
+// Processa comparação principal
+async function processComparison() {
+    if (appState.isProcessing) return;
+    
+    appState.isProcessing = true;
+    elements.compareBtn.disabled = true;
+    elements.loader.classList.add('show');
+    
     try {
-        // Lê os dois arquivos
-        const dataA = await readFile(fileA);
-        const dataB = await readFile(fileB);
-
-        // Verifica se eles têm conteúdo
-        if (!dataA.length || !dataB.length) {
-            status.textContent = "Uma das planilhas está vazia.";
-            status.style.color = "red";
-            return;
+        // Lê ambos os arquivos
+        showNotification('Processando', 'Lendo arquivos...', 'info');
+        
+        const [result1, result2] = await Promise.all([
+            readFile(appState.file1),
+            readFile(appState.file2)
+        ]);
+        
+        appState.data1 = result1.data;
+        appState.data2 = result2.data;
+        
+        // Encontra colunas de processo
+        const col1 = findProcessColumn(appState.data1);
+        const col2 = findProcessColumn(appState.data2);
+        
+        if (!col1 || !col2) {
+            throw new Error('Não foi possível identificar a coluna de processos');
         }
-
-        // Procura automaticamente a coluna correta em cada arquivo
-        const colA = encontrarColunaProcesso(dataA[0]);
-        const colB = encontrarColunaProcesso(dataB[0]);
-
-        if (!colA || !colB) {
-            status.textContent = "Erro: As planilhas precisam ter uma coluna que contenha 'Processo' no nome (ex: 'N° Processo').";
-            status.style.color = "red";
-            return;
-        }
-
-        // Cria conjuntos com os números de processo
-        const setA = new Set(dataA.map(x => String(x[colA]).trim()));
-        const setB = new Set(dataB.map(x => String(x[colB]).trim()));
-
-        // Faz a interseção (somente processos que existem nas 2 planilhas)
-        const intersection = [...setA].filter(proc => setB.has(proc) && proc !== "");
-
-        // Caso não existam processos repetidos nas duas planilhas
-        if (intersection.length === 0) {
-            status.textContent = "Nenhum processo em comum encontrado.";
-            status.style.color = "orange";
-            return;
-        }
-
-        // Monta a planilha final com os processos em comum
-        const resultSheet = XLSX.utils.json_to_sheet(
-            intersection.map(proc => ({ Processo: proc }))
-        );
-
-        const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, resultSheet, "Comuns");
-
-        // Salva o arquivo XLSX no computador do usuário
-        XLSX.writeFile(wb, "processos_em_comum.xlsx");
-
-        status.textContent = `Arquivo gerado com ${intersection.length} processos em comum.`;
-        status.style.color = "green";
-
-    } catch (err) {
-        status.textContent = "Erro ao processar os arquivos.";
-        status.style.color = "red";
+        
+        showNotification('Analisando', 'Processando dados...', 'info');
+        
+        // Extrai processos
+        const processes1 = appState.data1
+            .map(row => String(row[col1] || '').trim())
+            .filter(p => p && p !== 'null' && p !== 'undefined');
+        
+        const processes2 = appState.data2
+            .map(row => String(row[col2] || '').trim())
+            .filter(p => p && p !== 'null' && p !== 'undefined');
+        
+        // Remove duplicados
+        const unique1 = [...new Set(processes1)];
+        const unique2 = [...new Set(processes2)];
+        
+        // Encontra interseção
+        const common = unique1.filter(proc => unique2.includes(proc));
+        const uniqueIn1 = unique1.filter(proc => !unique2.includes(proc));
+        const uniqueIn2 = unique2.filter(proc => !unique1.includes(proc));
+        
+        // Prepara resultados
+        appState.results = {
+            common: common,
+            uniqueIn1: uniqueIn1,
+            uniqueIn2: uniqueIn2,
+            total1: unique1.length,
+            total2: unique2.length,
+            totalCommon: common.length,
+            totalUnique: uniqueIn1.length + uniqueIn2.length,
+            column1: col1,
+            column2: col2
+        };
+        
+        // Anima barra de progresso
+        animateProgressBar();
+        
+        // Aguarda animação
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        
+        // Mostra resultados
+        displayResults();
+        
+        showNotification('Concluído', 'Comparação finalizada com sucesso!', 'success');
+        
+    } catch (error) {
+        console.error('Erro:', error);
+        showNotification('Erro', error.message || 'Falha ao processar arquivos', 'error');
+    } finally {
+        appState.isProcessing = false;
+        elements.loader.classList.remove('show');
     }
 }
+
+// Anima barra de progresso
+function animateProgressBar() {
+    elements.progressBar.style.width = '0%';
+    
+    setTimeout(() => {
+        elements.progressBar.style.width = '100%';
+    }, 100);
+}
+
+// Exibe resultados
+function displayResults() {
+    const results = appState.results;
+    
+    // Atualiza estatísticas
+    document.getElementById('totalProcesses').textContent = 
+        results.total1 + results.total2;
+    document.getElementById('commonProcesses').textContent = results.totalCommon;
+    document.getElementById('uniqueProcesses').textContent = results.totalUnique;
+    
+    // Atualiza tabela
+    updateResultsTable();
+    
+    // Mostra seção de resultados
+    elements.resultsSection.style.display = 'block';
+    
+    // Scroll suave para resultados
+    elements.resultsSection.scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'start' 
+    });
+}
+
+// Atualiza tabela de resultados
+function updateResultsTable() {
+    const results = appState.results;
+    const tableBody = elements.tableBody;
+    
+    tableBody.innerHTML = '';
+    
+    // Adiciona processos comuns
+    results.common.forEach((process, index) => {
+        const row = createTableRow(index + 1, process, 'Comum', 'Ambas', 'status-common');
+        tableBody.appendChild(row);
+    });
+    
+    // Adiciona processos únicos da planilha 1
+    results.uniqueIn1.forEach((process, index) => {
+        const rowNum = results.common.length + index + 1;
+        const row = createTableRow(rowNum, process, 'Exclusivo', 'Planilha 1', 'status-unique');
+        tableBody.appendChild(row);
+    });
+    
+    // Adiciona processos únicos da planilha 2
+    results.uniqueIn2.forEach((process, index) => {
+        const rowNum = results.common.length + results.uniqueIn1.length + index + 1;
+        const row = createTableRow(rowNum, process, 'Exclusivo', 'Planilha 2', 'status-unique');
+        tableBody.appendChild(row);
+    });
+}
+
+// Cria linha da tabela
+function createTableRow(number, process, status, presentIn, statusClass) {
+    const row = document.createElement('tr');
+    row.innerHTML = `
+        <td>${number}</td>
+        <td><span class="process-number">${process}</span></td>
+        <td><span class="status-badge ${statusClass}">${status}</span></td>
+        <td>${presentIn}</td>
+        <td>${new Date().toLocaleDateString('pt-BR')}</td>
+    `;
+    
+    // Efeito de entrada
+    row.style.opacity = '0';
+    row.style.transform = 'translateY(20px)';
+    
+    setTimeout(() => {
+        row.style.transition = 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
+        row.style.opacity = '1';
+        row.style.transform = 'translateY(0)';
+    }, 50);
+    
+    // Efeito de clique
+    row.addEventListener('click', () => {
+        showNotification('Detalhes do Processo', 
+            `Processo: ${process}<br>Status: ${status}<br>Presente em: ${presentIn}`, 
+            'info');
+    });
+    
+    return row;
+}
+
+// =============== EXPORTAÇÃO ===============
+
+// Exporta para Excel
+function exportToExcel() {
+    if (!appState.results) return;
+    
+    try {
+        const data = appState.results.common.map(process => ({
+            'Número do Processo': process,
+            'Status': 'Comum',
+            'Presente em': 'Ambas as planilhas',
+            'Data da Análise': new Date().toLocaleDateString('pt-BR')
+        }));
+        
+        const ws = XLSX.utils.json_to_sheet(data);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Processos Comuns');
+        
+        const date = new Date().toISOString().slice(0, 10);
+        XLSX.writeFile(wb, `processos_comuns_${date}.xlsx`);
+        
+        showNotification('Exportado', 'Arquivo Excel gerado com sucesso', 'success');
+    } catch (error) {
+        showNotification('Erro', 'Falha ao exportar para Excel', 'error');
+    }
+}
+
+// Exporta para CSV
+function exportToCSV() {
+    if (!appState.results) return;
+    
+    try {
+        const headers = ['Número do Processo', 'Status', 'Presente em', 'Data da Análise'];
+        const rows = appState.results.common.map(process => [
+            process,
+            'Comum',
+            'Ambas as planilhas',
+            new Date().toLocaleDateString('pt-BR')
+        ]);
+        
+        const csvContent = [
+            headers.join(','),
+            ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
+        ].join('\n');
+        
+        const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        
+        link.href = url;
+        link.download = `processos_comuns_${new Date().toISOString().slice(0, 10)}.csv`;
+        link.click();
+        
+        URL.revokeObjectURL(url);
+        
+        showNotification('Exportado', 'Arquivo CSV gerado com sucesso', 'success');
+    } catch (error) {
+        showNotification('Erro', 'Falha ao exportar para CSV', 'error');
+    }
+}
+
+// Reinicia comparação
+function resetComparison() {
+    // Limpa estado
+    appState = {
+        file1: null,
+        file2: null,
+        data1: null,
+        data2: null,
+        results: null,
+        isProcessing: false
+    };
+    
+    // Limpa inputs
+    elements.file1Input.value = '';
+    elements.file2Input.value = '';
+    
+    // Limpa interface
+    document.querySelectorAll('.file-info').forEach(el => {
+        el.style.display = 'none';
+    });
+    
+    // Esconde resultados
+    elements.resultsSection.style.display = 'none';
+    elements.tableBody.innerHTML = '';
+    
+    // Desabilita botão
+    updateCompareButton();
+    
+    // Scroll para topo
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    
+    showNotification('Sistema reiniciado', 'Pronto para nova comparação', 'info');
+}
+
+// =============== INICIALIZAÇÃO ===============
+
+// Configura eventos iniciais
+document.addEventListener('DOMContentLoaded', () => {
+    // Efeito de entrada
+    const cards = document.querySelectorAll('.upload-card');
+    cards.forEach((card, index) => {
+        card.style.animationDelay = `${index * 0.2}s`;
+    });
+    
+    // Mostra mensagem de boas-vindas
+    setTimeout(() => {
+        showNotification('Bem-vindo', 'Selecione duas planilhas para iniciar a comparação', 'info');
+    }, 1000);
+});
 </script>
 </body>
 </html>
