@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Comparador de Processos</title>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #eef1f7;
+        margin: 0;
+        padding: 0;
+    }
+
+    .container {
+        width: 60%;
+        margin: 40px auto;
+        background: #ffffff;
+        padding: 30px;
+        border-radius: 14px;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    }
+
+    h1 {
+        text-align: center;
+        color: #213b72;
+        margin-bottom: 25px;
+        font-size: 28px;
+    }
+
+    .box {
+        margin-bottom: 20px;
+        padding: 20px;
+        background: #f8f9fc;
+        border: 1px solid #dcdfe6;
+        border-radius: 10px;
+    }
+
+    label {
+        font-weight: bold;
+        color: #2b2b2b;
+    }
+
+    .btn {
+        width: 100%;
+        padding: 14px;
+        border: none;
+        background: #294bbf;
+        color: #fff;
+        font-size: 16px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-weight: bold;
+        margin-top: 15px;
+        transition: 0.2s ease-in-out;
+    }
+
+    .btn:hover {
+        background: #1a3590;
+    }
+
+    #status {
+        margin-top: 20px;
+        font-size: 16px;
+        text-align: center;
+        font-weight: bold;
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Comparador de Processos</h1>
+
+    <div class="box">
+        <label>Planilha 1 (CSV ou XLSX):</label><br><br>
+        <input type="file" id="fileA" accept=".csv,.xlsx">
+    </div>
+
+    <div class="box">
+        <label>Planilha 2 (CSV ou XLSX):</label><br><br>
+        <input type="file" id="fileB" accept=".csv,.xlsx">
+    </div>
+
+    <button class="btn" onclick="processFiles()">Comparar e Gerar Arquivo</button>
+
+    <p id="status"></p>
+</div>
+
+<!-- XLSX Parser -->
+<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+
+<script>
+// Função para detectar a coluna que contém "processo"
+function encontrarColunaProcesso(obj) {
+    const cols = Object.keys(obj);
+
+    for (const col of cols) {
+        const normalizado = col
+            .toLowerCase()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "") // remove acentos
+            .replace(/[^a-z]/g, ""); // remove símbolos
+
+        if (normalizado.includes("processo")) {
+            return col; // retorna o nome exato da coluna encontrada
+        }
+    }
+    return null;
+}
+
+// Leitura de arquivo (CSV ou XLSX)
+function readFile(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+
+        reader.onload = e => {
+            const data = new Uint8Array(e.target.result);
+            const workbook = XLSX.read(data, { type: 'array' });
+            const sheet = workbook.Sheets[workbook.SheetNames[0]];
+            const json = XLSX.utils.sheet_to_json(sheet, { defval: "" });
+            resolve(json);
+        };
+
+        reader.onerror = err => reject(err);
+        reader.readAsArrayBuffer(file);
+    });
+}
+
+async function processFiles() {
+    const fileA = document.getElementById("fileA").files[0];
+    const fileB = document.getElementById("fileB").files[0];
+    const status = document.getElementById("status");
+
+    if (!fileA || !fileB) {
+        status.textContent = "Selecione as duas planilhas.";
+        status.style.color = "red";
+        return;
+    }
+
+    status.textContent = "Lendo arquivos, aguarde...";
+    status.style.color = "black";
+
+    try {
+        const dataA = await readFile(fileA);
+        const dataB = await readFile(fileB);
+
+        if (!dataA.length || !dataB.length) {
+            status.textContent = "Uma das planilhas está vazia.";
+            status.style.color = "red";
+            return;
+        }
+
+        // Detectar automaticamente a coluna
+        const colA = encontrarColunaProcesso(dataA[0]);
+        const colB = encontrarColunaProcesso(dataB[0]);
+
+        if (!colA || !colB) {
+            status.textContent = "Erro: As planilhas precisam ter uma coluna que contenha 'Processo' no nome (ex: 'N° Processo').";
+            status.style.color = "red";
+            return;
+        }
+
+        // Extrair os valores dos processos
+        const setA = new Set(dataA.map(x => String(x[colA]).trim()));
+        const setB = new Set(dataB.map(x => String(x[colB]).trim()));
+
+        // Interseção dos processos
+        const intersection = [...setA].filter(proc => setB.has(proc) && proc !== "");
+
+        if (intersection.length === 0) {
+            status.textContent = "Nenhum processo em comum encontrado.";
+            status.style.color = "orange";
+            return;
+        }
+
+        // Criar XLSX final
+        const resultSheet = XLSX.utils.json_to_sheet(
+            intersection.map(proc => ({ Processo: proc }))
+        );
+
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, resultSheet, "Comuns");
+
+        XLSX.writeFile(wb, "processos_em_comum.xlsx");
+
+        status.textContent = `Arquivo gerado com ${intersection.length} processos em comum.`;
+        status.style.color = "green";
+
+    } catch (err) {
+        status.textContent = "Erro ao processar os arquivos.";
+        status.style.color = "red";
+    }
+}
+</script>
+</body>
+</html>
