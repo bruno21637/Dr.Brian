@@ -5,6 +5,7 @@
 <title>Comparador de Processos</title>
 
 <style>
+    /* Estilo básico da página */
     body {
         font-family: Arial, sans-serif;
         background: #eef1f7;
@@ -12,6 +13,7 @@
         padding: 0;
     }
 
+    /* Container central onde fica o conteúdo */
     .container {
         width: 60%;
         margin: 40px auto;
@@ -21,6 +23,7 @@
         box-shadow: 0 4px 16px rgba(0,0,0,0.15);
     }
 
+    /* Título da página */
     h1 {
         text-align: center;
         color: #213b72;
@@ -28,6 +31,7 @@
         font-size: 28px;
     }
 
+    /* Caixinhas brancas ao redor do input */
     .box {
         margin-bottom: 20px;
         padding: 20px;
@@ -36,11 +40,13 @@
         border-radius: 10px;
     }
 
+    /* Estilo dos textos (labels) */
     label {
         font-weight: bold;
         color: #2b2b2b;
     }
 
+    /* Botão principal */
     .btn {
         width: 100%;
         padding: 14px;
@@ -55,10 +61,12 @@
         transition: 0.2s ease-in-out;
     }
 
+    /* Efeito ao passar o mouse */
     .btn:hover {
         background: #1a3590;
     }
 
+    /* Texto de status (mensagens do sistema) */
     #status {
         margin-top: 20px;
         font-size: 16px;
@@ -72,66 +80,85 @@
 <div class="container">
     <h1>Comparador de Processos</h1>
 
+    <!-- Seleção do primeiro arquivo -->
     <div class="box">
         <label>Planilha 1 (CSV ou XLSX):</label><br><br>
         <input type="file" id="fileA" accept=".csv,.xlsx">
     </div>
 
+    <!-- Seleção do segundo arquivo -->
     <div class="box">
         <label>Planilha 2 (CSV ou XLSX):</label><br><br>
         <input type="file" id="fileB" accept=".csv,.xlsx">
     </div>
 
+    <!-- Botão que inicia o processo -->
     <button class="btn" onclick="processFiles()">Comparar e Gerar Arquivo</button>
 
+    <!-- Área onde aparecerão mensagens para o usuário -->
     <p id="status"></p>
 </div>
 
-<!-- XLSX Parser -->
+<!-- Biblioteca XLSX para poder ler arquivos Excel -->
 <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
 
 <script>
-// Função para detectar a coluna que contém "processo"
+// Função que tenta identificar qual coluna contém o número do processo
+// Isso é útil porque o nome pode ser "N° Processo", "Processo", "Número Processo", etc
 function encontrarColunaProcesso(obj) {
-    const cols = Object.keys(obj);
+    const cols = Object.keys(obj); // Pega os nomes das colunas
 
     for (const col of cols) {
         const normalizado = col
-            .toLowerCase()
-            .normalize("NFD")
+            .toLowerCase()                // deixa tudo minúsculo
+            .normalize("NFD")             // separa acentos
             .replace(/[\u0300-\u036f]/g, "") // remove acentos
-            .replace(/[^a-z]/g, ""); // remove símbolos
+            .replace(/[^a-z]/g, "");      // remove caracteres especiais
 
+        // Verifica se o texto da coluna contém "processo"
         if (normalizado.includes("processo")) {
-            return col; // retorna o nome exato da coluna encontrada
+            return col; // Achou a coluna correta
         }
     }
-    return null;
+
+    return null; // Se não achou nenhuma coluna parecida
 }
 
-// Leitura de arquivo (CSV ou XLSX)
+// Função para ler arquivos XLSX ou CSV usando FileReader
 function readFile(file) {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
 
+        // O arquivo foi carregado com sucesso
         reader.onload = e => {
             const data = new Uint8Array(e.target.result);
+
+            // Lê o arquivo usando XLSX
             const workbook = XLSX.read(data, { type: 'array' });
             const sheet = workbook.Sheets[workbook.SheetNames[0]];
+
+            // Converte a planilha em JSON
             const json = XLSX.utils.sheet_to_json(sheet, { defval: "" });
-            resolve(json);
+
+            resolve(json); // Retorna os dados
         };
 
+        // Caso aconteça um erro na leitura
         reader.onerror = err => reject(err);
+
+        // Começa a leitura do arquivo
         reader.readAsArrayBuffer(file);
     });
 }
 
+// Função principal que compara as planilhas
 async function processFiles() {
+    // Pega os arquivos que o usuário escolheu
     const fileA = document.getElementById("fileA").files[0];
     const fileB = document.getElementById("fileB").files[0];
     const status = document.getElementById("status");
 
+    // Se não tiver 2 arquivos, não dá para continuar
     if (!fileA || !fileB) {
         status.textContent = "Selecione as duas planilhas.";
         status.style.color = "red";
@@ -142,16 +169,18 @@ async function processFiles() {
     status.style.color = "black";
 
     try {
+        // Lê os dois arquivos
         const dataA = await readFile(fileA);
         const dataB = await readFile(fileB);
 
+        // Verifica se eles têm conteúdo
         if (!dataA.length || !dataB.length) {
             status.textContent = "Uma das planilhas está vazia.";
             status.style.color = "red";
             return;
         }
 
-        // Detectar automaticamente a coluna
+        // Procura automaticamente a coluna correta em cada arquivo
         const colA = encontrarColunaProcesso(dataA[0]);
         const colB = encontrarColunaProcesso(dataB[0]);
 
@@ -161,20 +190,21 @@ async function processFiles() {
             return;
         }
 
-        // Extrair os valores dos processos
+        // Cria conjuntos com os números de processo
         const setA = new Set(dataA.map(x => String(x[colA]).trim()));
         const setB = new Set(dataB.map(x => String(x[colB]).trim()));
 
-        // Interseção dos processos
+        // Faz a interseção (somente processos que existem nas 2 planilhas)
         const intersection = [...setA].filter(proc => setB.has(proc) && proc !== "");
 
+        // Caso não existam processos repetidos nas duas planilhas
         if (intersection.length === 0) {
             status.textContent = "Nenhum processo em comum encontrado.";
             status.style.color = "orange";
             return;
         }
 
-        // Criar XLSX final
+        // Monta a planilha final com os processos em comum
         const resultSheet = XLSX.utils.json_to_sheet(
             intersection.map(proc => ({ Processo: proc }))
         );
@@ -182,6 +212,7 @@ async function processFiles() {
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, resultSheet, "Comuns");
 
+        // Salva o arquivo XLSX no computador do usuário
         XLSX.writeFile(wb, "processos_em_comum.xlsx");
 
         status.textContent = `Arquivo gerado com ${intersection.length} processos em comum.`;
